@@ -188,7 +188,7 @@ while export_offset < allfields_count: #while the export_offset counter is less 
     }
 
     #Export timeseries as CSV to Google Drive
-    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+"_"+str(export_offset+15000), taskParams)
+    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+str(sys.argv[2]+"_"+str(export_offset+15000), taskParams)
     MyTry.start()
 
     #Pause until export is finished
