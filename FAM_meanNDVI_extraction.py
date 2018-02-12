@@ -10,7 +10,8 @@ ee.Initialize()
 usage = "Calculates field averages limited to number of polygons and within the date(YYYY-MM-DD format) range specified\n" + \
         "usage: FAM_meanNDVI_extraction.py <basemap> <satellite> <outputNamePrefix> <startDate> <endDate> <verbose(y/n)>"
 
-#Sample command line call: python FAM_meanNDVI_extraction.py users/mhang/base13-15_wa_poly_slim L7SR CA_NDVI_timeseries 2015-01-01 2015-12-31 0 n
+#Sample command line call: python FAM_meanNDVI_extraction.py users/mhang/base13-15_wa_poly_slim L7SR WA_NDVI_timeseries 2015-01-01 2015-12-31 0 n
+#                          python FAM_meanNDVI_extraction.py users/mhang/base16_ca_poly_170619_slim L7SR CA_NDVI_timeseries 2016-01-01 2016-12-31 0 n
 
 if len(sys.argv) < 7:  # Number of arguments required
     print usage
@@ -188,7 +189,7 @@ while export_offset < allfields_count: #while the export_offset counter is less 
     }
 
     #Export timeseries as CSV to Google Drive
-    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+str(sys.argv[2]+"_"+str(export_offset+15000), taskParams)
+    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+"_"+str(sys.argv[2])+"_"+str(export_offset+15000), taskParams)
     MyTry.start()
 
     #Pause until export is finished
