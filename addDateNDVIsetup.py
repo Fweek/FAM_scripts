@@ -7,8 +7,10 @@
 #For more help: https://github.com/cython/cython/wiki/InstallingOnWindows
 #https://github.com/cython/cython/wiki/CythonExtensionsOnWindows
 
-from setuptools import setup
-from setuptools import Extension
+#from setuptools import setup
+#from setuptools import Extension
+from distutils.core import setup
+from distutils.extension import Extension
 from Cython.Distutils import build_ext
 import numpy
 
