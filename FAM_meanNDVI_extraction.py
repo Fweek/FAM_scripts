@@ -133,13 +133,13 @@ while export_offset < allfields_count: #while the export_offset counter is less 
     if vMode == 'y':
         print "Loading and filtering image collection using %s to %s" % (tStart, tEnd)
     if sys.argv[2] == 'L7SR':
-        L7_IC = ee.ImageCollection("LANDSAT/LE7_SR") #Landsat7 Surface Reflectance Image Collection
+        L7_IC = ee.ImageCollection("LANDSAT/LE07/C01/T1_SR") #Landsat7 Surface Reflectance Image Collection
         NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7).select('ndvi')
     elif sys.argv[2] == 'L7TOA':
         L7_IC = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK") #Landsat7 Top-of-Atmosphere Reflectance (Orthorectified) with Fmask Image Collection
         NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7_TOA).select('ndvi')
     elif sys.argv[2] == 'L8SR':
-        L8_IC = ee.ImageCollection("LANDSAT/LC8_SR") #Landsat8 Surface Reflectance Image Collection
+        L8_IC = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR") #Landsat8 Surface Reflectance Image Collection
         NDVI_IC = L8_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L8).select('ndvi')
     elif sys.argv[2] == 'L8TOA':
         L8_IC = ee.ImageCollection("LANDSAT/LC8_L1T_TOA_FMASK") #Landsat 8 Top-of-Atmosphere Reflectance (Orthorectified) with Fmask Collection
