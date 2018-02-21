@@ -15,7 +15,7 @@ import addDateNDVI
 
 # Error message user receives if missing parameters
 usage = "Formats the input CSV files to match NEX files\n" + \
-        "usage: python CSV_reformat.py <Directory path of input files> <year>"
+        "usage: python CSV_reformat.py <Directory path of raw input CSVs> <year>"
 
 if len(sys.argv) < 2:  #number of arguments required
     print usage
