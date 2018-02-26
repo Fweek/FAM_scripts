@@ -33,7 +33,7 @@ allfields_count = allfields.size()
 def calculateNDVI_L7(image):
     ndvi = image.normalizedDifference(['B4', 'B3']).rename('ndvi')
     #Filter the clouds
-    ndvi = ndvi.updateMask(image.select('cfmask').eq(0))
+    ndvi = ndvi.updateMask(image.select('pixel_qa').bitwiseAnd(2).neq(0));
     return image.addBands(ndvi)
 
 
@@ -49,7 +49,7 @@ def calculateNDVI_L7_TOA(image):
 def calculateNDVI_L8(image):
     ndvi = image.normalizedDifference(['B5', 'B4']).rename('ndvi')
     #Filter the clouds
-    ndvi = ndvi.updateMask(image.select('cfmask').eq(0))
+    ndvi = ndvi.updateMask(image.select('pixel_qa').bitwiseAnd(2).neq(0));
     return image.addBands(ndvi)
 
 
@@ -100,7 +100,7 @@ def removeFeatureGeometry(feature):
 def  addDummyFeature(fc):
   dummy = ee.FeatureCollection(
     ee.Feature(None, {'image_time_start_string': 0,
-                      'sims_id': 0,
+                      'simsid': 0,
                       'ndvi': 0
                       })
   )
@@ -189,7 +189,7 @@ while export_offset < allfields_count: #while the export_offset counter is less 
     }
 
     #Export timeseries as CSV to Google Drive
-    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+"_"+str(sys.argv[2])+"_"+str(export_offset+15000), taskParams)
+    MyTry = ee.batch.Export.table(finalOutput, str(sys.argv[3])+"_"+str(sys.argv[2])+"_"+str(sys.argv[4])+"_"+str(export_offset+15000), taskParams)
     MyTry.start()
 
     #Pause until export is finished
