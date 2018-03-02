@@ -20,7 +20,8 @@ if len(sys.argv) < 7:  # Number of arguments required
 #---------------------------------------------------------------------------------------------------
 #IMPORT Earth Engine objects
 allfields = ee.FeatureCollection(str(sys.argv[1]))
-allfields_count = allfields.size()
+allfields_size = allfields.size()
+allfields_count = allfields_size.getInfo()
 
 
 #---------------------------------------------------------------------------------------------------
