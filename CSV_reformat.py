@@ -169,7 +169,7 @@ for csvFilename in os.listdir('.'):
     finalOutput[1:yDim,0] = uniqueIds  #Now that the header row is all filled in, we're fill the header column with all the SIMs IDs
 
     # Export a template CSV for class codes to be filled in later
-    output_destination_class = "C:\Users\Michael\Desktop\Test\RAW_CA\WA_2015" + '/Class-Template/' + 'Class_' + csvFilename
+    output_destination_class = sys.argv[1] + '/Class-Template/' + 'Class_' + csvFilename
     numpy.savetxt(output_destination_class, finalOutput, delimiter=",", fmt='%.3f')
 
     #print "Starting to populate array"  #Now we need to populate the rest of the table with NDVI
@@ -178,7 +178,7 @@ for csvFilename in os.listdir('.'):
     #print finalOutput
 
     # Write list to CSV and export
-    output_destination_ndvi = "C:\Users\Michael\Desktop\Test\RAW_CA\WA_2015" + '/Output-Reformatted/' + 'Reformatted_' + csvFilename
+    output_destination_ndvi = sys.argv[1] + '/Output-Reformatted/' + 'Reformatted_' + csvFilename
     numpy.savetxt(output_destination_ndvi, finalOutput, delimiter=",", fmt='%.3f')
 
 print "REFORMATTING COMPLETE"
