@@ -27,9 +27,13 @@ bTime = datetime.datetime.now()
 # Set working directory to user input (directory path of input files)
 os.chdir(sys.argv[1])
 
-# Make a new directory for the output files if it does not already exist
+# Make a new directory for the timeseries output files if it does not already exist
 if not os.path.exists('Output-Reformatted'):
     os.makedirs('Output-Reformatted', )
+
+# Make a new directory for the class output files if it does not already exist
+if not os.path.exists('Class-Template'):
+    os.makedirs('Class-Template', )
 
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
@@ -162,8 +166,11 @@ for csvFilename in os.listdir('.'):
         indx += 1  #index increases incrementally each loop
 
     #print "Adding the uniqueIds"
-    finalOutput[1:yDim,
-    0] = uniqueIds  #Now that the header row is all filled in, we're fill the header column with all the SIMs IDs
+    finalOutput[1:yDim,0] = uniqueIds  #Now that the header row is all filled in, we're fill the header column with all the SIMs IDs
+
+    # Export a template CSV for class codes to be filled in later
+    output_destination_class = "C:\Users\Michael\Desktop\Test\RAW_CA\WA_2015" + '/Class-Template/' + 'Class_' + csvFilename
+    numpy.savetxt(output_destination_class, finalOutput, delimiter=",", fmt='%.3f')
 
     #print "Starting to populate array"  #Now we need to populate the rest of the table with NDVI
     finalOutput = addDateNDVI.populate(yDim, finalOutput, tempOut)
@@ -171,8 +178,8 @@ for csvFilename in os.listdir('.'):
     #print finalOutput
 
     # Write list to CSV and export
-    output_destination = sys.argv[1] + '/Output-Reformatted/' + 'Reformatted_' + csvFilename
-    numpy.savetxt(output_destination, finalOutput, delimiter=",", fmt='%.3f')
+    output_destination_ndvi = "C:\Users\Michael\Desktop\Test\RAW_CA\WA_2015" + '/Output-Reformatted/' + 'Reformatted_' + csvFilename
+    numpy.savetxt(output_destination_ndvi, finalOutput, delimiter=",", fmt='%.3f')
 
 print "REFORMATTING COMPLETE"
 print "Start time: ", bTime
