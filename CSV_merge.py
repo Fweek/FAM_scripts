@@ -59,7 +59,7 @@ with open('temp.csv','wb') as fout:
 print "done"
 
 print "Double-checking for duplicate headers"
-with open('temp.csv', 'rb') as inp, open(sys.argv[1]+'/Output-Merged/Merged_'+output_prefix+'.csv', 'wb') as out:
+with open('temp.csv', 'rb') as inp, open(sys.argv[1]+'/Output-Merged/'+date_year+'_avgs.csv', 'wb') as out:
     reader = csv.reader(inp)
     writer = csv.writer(out)
     headers = next(reader, None)  # returns the headers or `None` if the input is empty
