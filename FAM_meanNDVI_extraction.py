@@ -10,8 +10,8 @@ ee.Initialize()
 usage = "Calculates field averages limited to number of polygons and within the date(YYYY-MM-DD format) range specified\n" + \
         "usage: FAM_meanNDVI_extraction.py <basemap> <satellite> <outputNamePrefix> <startDate> <endDate> <verbose(y/n)>"
 
-#Sample command line call: python FAM_meanNDVI_extraction.py users/mhang/base13-15_wa_poly_slim L7SR WA_NDVI_timeseries 2015-01-01 2015-12-31 0 n
-#                          python FAM_meanNDVI_extraction.py users/mhang/base16_ca_poly_170619_slim L7SR CA_NDVI_timeseries 2016-01-01 2016-12-31 0 n
+#Sample command line call: python FAM_meanNDVI_extraction.py users/mhang/base13-15_wa_poly_180305_slim L7SR WA_NDVI_timeseries 2015-01-01 2015-12-31 0 n
+#                          python FAM_meanNDVI_extraction.py users/mhang/base16_ca_poly_180305_slim L7SR CA_NDVI_timeseries 2016-01-01 2016-12-31 0 n
 
 if len(sys.argv) < 7:  # Number of arguments required
     print usage
@@ -28,7 +28,7 @@ allfields_count = allfields_size.getInfo()
 #FUNCTIONS
 #Function to calculate NDVI for Landsat 7 SR
 def calculateNDVI_L7(image):
-    ndvi = image.normalizedDifference(['B4', 'B3']).rename('ndvi')
+    ndvi = image.normalizedDifference(['B4', 'B3']).rename('NDVI')
     #Filter the clouds
     ndvi = ndvi.updateMask(image.select('pixel_qa').bitwiseAnd(2).neq(0));
     return image.addBands(ndvi)
@@ -36,7 +36,7 @@ def calculateNDVI_L7(image):
 
 #Function to calculate NDVI for Landsat 7 TOA
 def calculateNDVI_L7_TOA(image):
-    ndvi = image.normalizedDifference(['B4', 'B3']).rename('ndvi')
+    ndvi = image.normalizedDifference(['B4', 'B3']).rename('NDVI')
     #Filter the clouds
     ndvi = ndvi.updateMask(image.select('fmask').eq(0))
     return image.addBands(ndvi)
@@ -44,15 +44,15 @@ def calculateNDVI_L7_TOA(image):
 
 #Function to calculate NDVI for Landsat 8 SR
 def calculateNDVI_L8(image):
-    ndvi = image.normalizedDifference(['B5', 'B4']).rename('ndvi')
+    ndvi = image.normalizedDifference(['B5', 'B4']).rename('NDVI')
     #Filter the clouds
-    ndvi = ndvi.updateMask(image.select('pixel_qa').bitwiseAnd(2).neq(0));
+    ndvi = ndvi.updateMask(image.select('pixel_qa').bitwiseAnd(2).neq(0))
     return image.addBands(ndvi)
 
 
 #Function to calculate NDVI for Landsat 8 TOA
 def calculateNDVI_L8_TOA(image):
-    ndvi = image.normalizedDifference(['B5', 'B4']).rename('ndvi')
+    ndvi = image.normalizedDifference(['B5', 'B4']).rename('NDVI')
     #Filter the clouds
     ndvi = ndvi.updateMask(image.select('fmask').eq(0))
     return image.addBands(ndvi)
@@ -60,7 +60,7 @@ def calculateNDVI_L8_TOA(image):
 
 #Function to calculate NDVI for Sentinel 2A (no cloudmasking yet)
 def calculateNDVI_Sent2A(image):
-    ndvi = image.normalizedDifference(['B8', 'B4']).rename('ndvi')
+    ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI')
     return image.addBands(ndvi)
 
 
@@ -97,8 +97,8 @@ def removeFeatureGeometry(feature):
 def  addDummyFeature(fc):
   dummy = ee.FeatureCollection(
     ee.Feature(None, {'image_time_start_string': 0,
-                      'simsid': 0,
-                      'ndvi': 0
+                      'SIMS_ID': 0,
+                      'NDVI': 0
                       })
   )
   return dummy.merge(fc)
@@ -134,19 +134,19 @@ while export_offset < allfields_count: #while the export_offset counter is less 
         print "Loading and filtering image collection using %s to %s" % (tStart, tEnd)
     if sys.argv[2] == 'L7SR':
         L7_IC = ee.ImageCollection("LANDSAT/LE07/C01/T1_SR") #Landsat7 Surface Reflectance Image Collection
-        NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7).select('ndvi')
+        NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7).select('NDVI')
     elif sys.argv[2] == 'L7TOA':
         L7_IC = ee.ImageCollection("LANDSAT/LE7_L1T_TOA_FMASK") #Landsat7 Top-of-Atmosphere Reflectance (Orthorectified) with Fmask Image Collection
-        NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7_TOA).select('ndvi')
+        NDVI_IC = L7_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L7_TOA).select('NDVI')
     elif sys.argv[2] == 'L8SR':
         L8_IC = ee.ImageCollection("LANDSAT/LC08/C01/T1_SR") #Landsat8 Surface Reflectance Image Collection
-        NDVI_IC = L8_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L8).select('ndvi')
+        NDVI_IC = L8_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L8).select('NDVI')
     elif sys.argv[2] == 'L8TOA':
         L8_IC = ee.ImageCollection("LANDSAT/LC8_L1T_TOA_FMASK") #Landsat 8 Top-of-Atmosphere Reflectance (Orthorectified) with Fmask Collection
-        NDVI_IC = L8_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L8_TOA).select('ndvi')
+        NDVI_IC = L8_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_L8_TOA).select('NDVI')
     elif sys.argv[2] == 'Sent2A':
         Sent2A_IC = ee.ImageCollection("COPERNICUS/S2") #Sentinel-2 MSI: MultiSpectral Instrument, Level-1C
-        NDVI_IC = Sent2A_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_Sent2A).select('ndvi')
+        NDVI_IC = Sent2A_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_Sent2A).select('NDVI')
 
 
     if vMode == 'y':
