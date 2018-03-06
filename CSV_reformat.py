@@ -55,7 +55,7 @@ for csvFilename in os.listdir('.'):
     # Create a empty list container for input
     input = []
 
-    # Only keep the columns we want: DATE in column 1, NDVI in column 2, and SIMSID in column 3
+    # Only keep the columns we want: NDVI in column 1, SIMS_ID in column 2, and date in column 3
     for l in rdr:  #for each line in the current open CSV
         input.append((l[1], l[2], l[3]))  #take columns 1-3 and add them to the empty list container
 
@@ -63,7 +63,7 @@ for csvFilename in os.listdir('.'):
     input = input[1::]  #keep all rows but the header
 
     # Find how many unique ids we have
-    simsIds = [float(i[2]) for i in input] #create subset list that is just the 3rd column aka the Index 2 column (SIMs ID column) of the new list
+    simsIds = [float(i[1]) for i in input] #create subset list that is just the 3rd column aka the Index 2 column (SIMs ID column) of the new list
 
     # Get all the unique simsids and count them. This will be the number of rows for our final table
     uniqueIds = numpy.unique(simsIds)  #count all the unique SIMS IDs in the subset list
@@ -92,8 +92,8 @@ for csvFilename in os.listdir('.'):
 
     # More formatting
     for i in range(0, len(input)):  #for each row in the range of 0 to however long input is
-        inputItem = input[i]  #create list with just the current row. Ex. [01/05/2016, 0.105264589, 290026865]
-        dtStr = inputItem[0]  #create new list of just Index 0 cell (date cell)
+        inputItem = input[i]  #create list with just the current row. Ex. [0.105264589, 290026865, 01/05/2016]
+        dtStr = inputItem[2]  #create new list of just Index 0 cell (date cell)
 
         # If the input string is a date and the date format starts with YYYY do the following:
         if is_date(dtStr) == True and dtStr.startswith("20"):
@@ -104,17 +104,17 @@ for csvFilename in os.listdir('.'):
             # Reformat date
             dtNum = (datetime.datetime(int(y), int(m), int(d)) - datetime.datetime(1980, 1, 1)).days
             # Replace all {nd=null} values with -9999
-            ndvi = inputItem[1]
+            ndvi = inputItem[0]
             # If ndvi value is in {nd=0.#####} format do the following:
             if ndvi == '':
                 ndvi2 = string.replace(ndvi, '', '-9999')
                 # Now rebuild the SIMSID, date, NDVI list
-                tempOut[i, 0] = float(inputItem[2])  #add the SIMs ID to the 1st cell in tempOut
+                tempOut[i, 0] = float(inputItem[1])  #add the SIMs ID to the 1st cell in tempOut
                 tempOut[i, 1] = float(dtNum)  #add the new modified date to the 2nd cell in tempOut
                 tempOut[i, 2] = float(ndvi2)  #add the new modified NDVI to the 3rd cell in tempOut
                 # Otherwise if just a value do the following:
             else:
-                tempOut[i, 0] = float(inputItem[2])  #add the SIMs ID to the 1st cell in tempOut
+                tempOut[i, 0] = float(inputItem[1])  #add the SIMs ID to the 1st cell in tempOut
                 tempOut[i, 1] = float(dtNum)  #add the date to the 2nd cell in tempOut
                 tempOut[i, 2] = ndvi  #add the NDVI to the 3rd cell in tempOut
 
@@ -127,17 +127,17 @@ for csvFilename in os.listdir('.'):
             # Reformat date
             dtNum = (datetime.datetime(int(y), int(m), int(d)) - datetime.datetime(1980, 1, 1)).days
             # Replace all {nd=null} values with -9999
-            ndvi = inputItem[1]
+            ndvi = inputItem[0]
             # If ndvi value is in {nd=0.#####} format do the following:
             if ndvi == '':
                 ndvi2 = string.replace(ndvi, '', '-9999')
                 # Now rebuild the SIMSID, date, NDVI list
-                tempOut[i, 0] = float(inputItem[2])  #add the SIMs ID to the 1st cell in tempOut
+                tempOut[i, 0] = float(inputItem[1])  #add the SIMs ID to the 1st cell in tempOut
                 tempOut[i, 1] = float(dtNum)  #add the new modified date to the 2nd cell in tempOut
                 tempOut[i, 2] = float(ndvi2)  #add the new modified NDVI to the 3rd cell in tempOut
                 # Otherwise if just a value do the following:
             else:
-                tempOut[i, 0] = float(inputItem[2])  #add the SIMs ID to the 1st cell in tempOut
+                tempOut[i, 0] = float(inputItem[1])  #add the SIMs ID to the 1st cell in tempOut
                 tempOut[i, 1] = float(dtNum)  #add the date to the 2nd cell in tempOut
                 tempOut[i, 2] = float(ndvi)  #add the NDVI to the 3rd cell in tempOut
 
