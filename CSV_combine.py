@@ -7,23 +7,27 @@ import sys, os.path, datetime, numpy
 usage = "Combines complementary Landsat7 and Landsat8 reformatted CSV files into one, prioritizing Landsat8 values\n" + \
         "usage: python CSV_combine.py <Directory path of raw input CSVs>"
 
+if len(sys.argv) < 1:  #Number of arguments required
+    print usage
+    sys.exit(1)
+
 # Saves start date and time of script. Will be printed when script finishes.
 bTime = datetime.datetime.now()
 print " "
 print "COMBINING FILES..."
 
 # Set working directory to user input (directory path of input files)
-os.chdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING")
+os.chdir(sys.argv[1])
 
 # Make a new directory for the combined output files if it does not already exist
 if not os.path.exists('Output-Combined'):
     os.makedirs('Output-Combined', )
 
 # Set working directory to directory of reformatted files
-os.chdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING"+'/Output-Reformatted')
+os.chdir(sys.argv[1]+'/Output-Reformatted')
 
 # Count how many files are in the directory. There should be an even number of files. Half should be L7 and the other half L8
-files = [f for f in os.listdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING"+'/Output-Reformatted') if os.path.isfile(f)] #select only files and exclude directories
+files = [f for f in os.listdir(sys.argv[1]+'/Output-Reformatted') if os.path.isfile(f)] #select only files and exclude directories
 sortedFiles = sorted(files, key=len)
 filecount = len(sortedFiles) #count files
 
