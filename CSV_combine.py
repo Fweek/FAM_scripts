@@ -35,7 +35,7 @@ filecount = len(sortedFiles) #count files
 filecount_half = int(filecount/2)
 
 # Take the first filename and parse it out
-filename = str(files[0]) #create string object of the first file's filename
+filename = str(sortedFiles[0]) #create string object of the first file's filename
 filename_split = filename.split('_') #split the filename string up by _
 split_length = len(filename_split) #count the number of splits
 
