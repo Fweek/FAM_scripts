@@ -1,38 +1,36 @@
 #This script combines the compplementary Landsat7 and Landsat8 reformatted CSV files into one. It will replace Landat7 values where Landsat8 values are higher.
 
+# Import packages
 import sys, os.path, datetime, numpy
 
-#Error message user receives if missing parameters
+# Error message user receives if missing parameters
 usage = "Combines complementary Landsat7 and Landsat8 reformatted CSV files into one, prioritizing Landsat8 values\n" + \
         "usage: python CSV_combine.py <Directory path of raw input CSVs>"
 
-if len(sys.argv) < 1:  #Number of arguments required
-    print usage
-    sys.exit(1)
-
-#Saves start date and time of script. Will be printed when script finishes.
+# Saves start date and time of script. Will be printed when script finishes.
 bTime = datetime.datetime.now()
 print " "
 print "COMBINING FILES..."
 
-#Set working directory to user input (directory path of input files)
-os.chdir(sys.argv[1])
+# Set working directory to user input (directory path of input files)
+os.chdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING")
 
-#Make a new directory for the combined output files if it does not already exist
+# Make a new directory for the combined output files if it does not already exist
 if not os.path.exists('Output-Combined'):
     os.makedirs('Output-Combined', )
 
-#Set working directory to directory of reformatted files
-os.chdir(sys.argv[1]+'/Output-Reformatted')
+# Set working directory to directory of reformatted files
+os.chdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING"+'/Output-Reformatted')
 
-#Count how many files are in the directory. There should be an even number of files. Half should be L7 and the other half L8
-files = [f for f in sorted(os.listdir(sys.argv[1]+'/Output-Reformatted')) if os.path.isfile(f)] #select only files and exclude directories
-filecount = len(files) #count files
+# Count how many files are in the directory. There should be an even number of files. Half should be L7 and the other half L8
+files = [f for f in os.listdir("C:\Users\Michael\Desktop\WASHINGTON\TESTING"+'/Output-Reformatted') if os.path.isfile(f)] #select only files and exclude directories
+sortedFiles = sorted(files, key=len)
+filecount = len(sortedFiles) #count files
 
-#Divide the count in half
+# Divide the count in half
 filecount_half = int(filecount/2)
 
-#Take the first filename and parse it out
+# Take the first filename and parse it out
 filename = str(files[0]) #create string object of the first file's filename
 filename_split = filename.split('_') #split the filename string up by _
 split_length = len(filename_split) #count the number of splits
@@ -49,12 +47,12 @@ offset_name = filename_split[offset_index] #this split still has .csv at the end
 offset_name_split = offset_name.split('.') #split by .
 offset_value = int(offset_name_split[0])
 
-#Rejoin the original filename
+# Rejoin the original filename
 prefix = filename_split[0:sat_index]
 prefix_join = '_'.join(prefix)
 output_prefix = '_'.join(prefix[1:])
 
-#Merge L7 and L8 files together while overwriting L7 values with L8 values if the L7 value is 0
+# Merge L7 and L8 files together while overwriting L7 values with L8 values if the L7 value is 0
 for i in range(filecount_half): #loop for each pair of landsat files
     L7csv = numpy.genfromtxt(str(prefix_join)+'_L7'+str(sat_type_join)+'_'+str(offset_value)+".csv", delimiter= ",")
     L8csv = numpy.genfromtxt(str(prefix_join)+'_L8'+str(sat_type_join)+'_'+str(offset_value)+".csv", delimiter= ",")
