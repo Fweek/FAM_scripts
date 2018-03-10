@@ -166,11 +166,7 @@ for csvFilename in os.listdir('.'):
         indx += 1  #index increases incrementally each loop
 
     #print "Adding the uniqueIds"
-    finalOutput[1:yDim,0] = uniqueIds  #Now that the header row is all filled in, we're fill the header column with all the SIMs IDs
-
-    # Export a template CSV for class codes to be filled in later
-    output_destination_class = sys.argv[1] + '/Class-Template/' + 'Class_' + csvFilename
-    numpy.savetxt(output_destination_class, finalOutput, delimiter=",", fmt='%.3f')
+    finalOutput[1:yDim,0] = uniqueIds  #Now that the header row is all filled in, we're fill the header column with all the SIM_IDs
 
     #print "Starting to populate array"  #Now we need to populate the rest of the table with NDVI
     finalOutput = addDateNDVI.populate(yDim, finalOutput, tempOut)
@@ -180,6 +176,10 @@ for csvFilename in os.listdir('.'):
     # Write list to CSV and export
     output_destination_ndvi = sys.argv[1] + '/Output-Reformatted/' + 'Reformatted_' + csvFilename
     numpy.savetxt(output_destination_ndvi, finalOutput, delimiter=",", fmt='%.3f')
+
+    # Export a template CSV for class codes to be filled in later
+    output_destination_class = sys.argv[1] + '/Class-Template/' + 'Class_' + csvFilename
+    numpy.savetxt(output_destination_class, finalOutput, delimiter=",", fmt='%.3f')
 
 print "REFORMATTING COMPLETE"
 print "Start time: ", bTime
