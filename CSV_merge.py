@@ -3,6 +3,7 @@
 
 #Import packages
 import glob, os, csv, sys, datetime
+from shutil import copyfile
 
 #Error message user receives if missing parameters
 usage = "Merges all the individual CSV files into one\n" + \
@@ -48,7 +49,6 @@ print "STARTING MERGE..."
 header_saved = False
 with open('temp.csv','wb') as fout:
     for filename in CSV_files:
-        print(filename)
         with open(filename) as fin:
             header = next(fin)
             if not header_saved:
@@ -72,44 +72,7 @@ print "done"
 
 os.remove('temp.csv')
 
-#-----------------------------------------------------------
-#Merging class files
-
-#Set working directory to directory of reformatted class files
-
-os.chdir(sys.argv[1]+'/Class-Template')
-
-class_files = glob.glob("*L7SR*.csv") #select only Landsat 7 files; the satellite doesn't really matter, we just need one complete set of SIMSIDs
-
-print ' '
-print "STARTING MERGE..."
-header_saved = False
-with open('classtemp.csv','wb') as fout:
-    for filename in class_files:
-        print(filename)
-        with open(filename) as fin:
-            header = next(fin)
-            if not header_saved:
-                fout.write(header)
-                header_saved = True
-            for line in fin:
-                fout.write(line)
-print "done"
-
-print "Double-checking for duplicate headers"
-with open('classtemp.csv', 'rb') as inp, open(sys.argv[1]+'/Class-Merged/'+date_year+'_class.csv', 'wb') as out:
-    reader = csv.reader(inp)
-    writer = csv.writer(out)
-    headers = next(reader, None)  # returns the headers or `None` if the input is empty
-    if headers:
-        writer.writerow(headers)
-    for row in csv.reader(inp):
-        if row[1] != "date":
-            writer.writerow(row)
-print "done"
-
-os.remove('classtemp.csv')
-
+copyfile(sys.argv[1]+'/Output-Merged/'+date_year+'_avgs.csv', sys.argv[1]+'/Class-Merged/'+date_year+'_class.csv')
 
 print 'MERGING COMPLETE'
 print "Start time: ", bTime
