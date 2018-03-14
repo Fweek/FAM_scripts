@@ -4,7 +4,7 @@ import cyFieldClass as cyFC
 import pylab
 
 def main():
-  usage = "usage: %prog [options] <directory of mean NDVI timeseries CSV files>\n"+\
+  usage = "usage: %prog [options] <filesDir>\n"+\
             "FAM algorithm classiciation"
   parser = OptionParser(usage=usage)
   parser.add_option("-s","--start",dest="tStart",default=6,
@@ -39,8 +39,8 @@ def main():
   if tStart < 6:
     print "Error, tStart has to be greater than 5"
     sys.exit(0)
-
-  try:
+ 
+  try:   
     bTime = datetime.datetime.now()
 
     print "Field Classification ",tester
@@ -52,26 +52,26 @@ def main():
     #Processing year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr)
     prosYear = openCSV(outFn)
-
+  
     #Previous year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr-1)
     prevYear = openCSV(outFn)
-
+ 
     #output file
     outFn = "%s/%d_class.csv" % (outDir,curYr)
     outClass = openCSV(outFn,"int32")
     outClass = outClass.astype(numpy.float32)
-
+ 
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
 
     sys.exit(0)
     #crop file
     #outFn = "%s/field_cropType.csv" % (outDir)
     #cropType = openCSV(outFn,"int32")
-
-    print "Loaded data files"
-
-    print "Starting fallow fields classification..."
+          
+    print "Loaded data files"  
+     
+    print "Starting fallow fields classification..."      
     tStart = tStart + colOffset #+ 6
     tEnd = tEnd + colOffset
     print tStart,tEnd
@@ -85,10 +85,10 @@ def main():
 
       #print prosYear.dtype
       outClass = cyFC.classifyFields(prosYear,prevYear,refYear,outClass,i)
-
+      
     print outFn
-    numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
-
+    numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')       
+  
     print "Start time: ",bTime
     print "End time: ",datetime.datetime.now()
 
@@ -97,12 +97,12 @@ def main():
     sys.exit(1)
 
 def openCSV(outFn,dataType="float32"):
-  if os.path.exists(outFn):
+  if os.path.exists(outFn): 
     avgs = numpy.genfromtxt(outFn, dtype=dataType,delimiter = ',')
   else:
     print "Error: File %s doesn't exists" % outFn
     sys.exit(0)
-
+  
   return avgs
 
 if __name__ == '__main__':
