@@ -1,15 +1,14 @@
 import sys,os
 import numpy
-#import netCDF4
-import pylab
 import matplotlib.pyplot as plt
 
 #-----------------------------------------------------------
 def main():
   if len(sys.argv) < 3:
-     sys.stderr.write("ncTSeriesNGraphFromCSV.py <inSIDsListFn> <avgsCSV> <outDir> <yr> <outSuffix>\n")
+     sys.stderr.write("GraphCSVs.py <Input directory> <List of SIMSIDs to graph> <mean NDVI timeseries CSV file> <year> <Output suffix>\n")
      sys.exit(1)
-  inFn,avgsFn,outDir,year,outSuf = sys.argv[1],sys.argv[2],sys.argv[3],int(sys.argv[4]),sys.argv[5]
+  outDir = sys.argv[1]
+  inFn,avgsFn,year,outSuf = outDir+"/"+sys.argv[2],outDir+"/"+sys.argv[3],int(sys.argv[4]),sys.argv[5]
 
   print "Loading %s" % inFn
   fPtr = open(inFn,'r')
@@ -27,7 +26,7 @@ def main():
     sys.exit(0)
 
   #Get header
-  hdr = avgsList[0][5::]
+  #hdr = avgsList[0][5::]
   #print hdr,len(hdr)
   #hdrMa = numpy.ma.masked_less_equal(hdr,0)
 
