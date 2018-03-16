@@ -50,36 +50,40 @@ def main():
   try:   
     bTime = datetime.datetime.now()
 
-    print " Field Classification: ",tester
+    print "Field Classification ",tester
 
     #Open ref year
     outFn = "%s/%d_avgs.csv" % (outDir,refYr)
     refYear = openCSV(outFn)
     print ' Opened refYr'
+
     #Processing year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr)
     prosYear = openCSV(outFn)
     print ' Opened curYr'
+
     #Previous year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr-1)
     prevYear = openCSV(outFn)
     print ' Opened prevYr'
+
     #output file
     outFn = "%s/%d_class.csv" % (outDir,curYr)
     outClass = openCSV(outFn,"int32")
     outClass = outClass.astype(numpy.float32)
     print ' Opened Class'
+
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
     print ' Save output Class'
     #sys.exit(0)
-
+ 
     #crop file
     #outFn = "%s/field_cropType.csv" % (outDir)
     #cropType = openCSV(outFn,"int32")
           
-    print " Loaded data files"
+    print "Loaded data files"  
      
-    print " Starting fallow fields classification..."
+    print "Starting fallow fields classification..."      
     tStart = tStart + colOffset #+ 6
     tEnd = tEnd + colOffset
     print ' tStart: ',tStart,', tEnd: ',tEnd
@@ -94,7 +98,7 @@ def main():
       #print prosYear.dtype
       outClass = cyFC.classifyFields(prosYear,prevYear,refYear,outClass,i)
       
-    print 'Output dir: ',outFn
+    print outFn
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')       
   
     print "Start time: ",bTime
