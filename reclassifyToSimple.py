@@ -64,7 +64,8 @@ def main():
     #yDim = 226285
     #yDim = 242409
     #yDim = 370897
-    yDim = 342326
+    #yDim = 342326
+    yDim = 120009
     output = numpy.zeros([yDim,26], dtype=numpy.float32)
 
     indxAdd = 0
@@ -115,7 +116,7 @@ def main():
         print  datet.strftime("%Y%m%d")
         print  t3Int   
 
-        print "t2 and t3",t2,t3
+        print "t2: ",t2,"t3: ",t3
         print tStart,tEnd
         outClass = cyFC.reclassify(prosYear,tStart,tEnd)
 
