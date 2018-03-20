@@ -117,7 +117,9 @@ def main():
         print  t3Int   
 
         print "t2: ",t2,"t3: ",t3
-        print tStart,tEnd
+        print 'tStart=',tStart,'tEnd=',tEnd
+        print "prosYear", prosYear
+        prosYear = prosYear.astype(numpy.float64)
         outClass = cyFC.reclassify(prosYear,tStart,tEnd)
 
         #add to right column
