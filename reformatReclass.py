@@ -6,9 +6,10 @@
 # Import libraries and read-in FAM output csv file.
 import pandas as pd
 import os, csv, sys
+from simpledbf import Dbf5
 
-usage = "Formats the input CSV files to match NEX files\n" + \
-        "usage: python reformatreclass.py <Directory path of raw input CSVs> <filename of DBF>"
+usage = "Formates the CDL codes in the reclassified CSV file in preparation to make pivot tables\n" + \
+        "usage: python reformatreclass.py <Directory path of reclassified file> <filename of DBF>"
 
 if len(sys.argv) < 2:  #number of arguments required
     print usage
@@ -19,8 +20,8 @@ os.chdir(sys.argv[1])
 
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
-    if not csvFilename.startswith('reclassified'):
-        print "SKIPPING " + csvFilename + ": Does not start with reclassified"
+    if not csvFilename.startswith('reclassified'): #skip the file if it does not start with reclassified in filename
+        print 'SKIPPING ' + csvFilename + ': Does not start with reclassified'
         continue
         #sys.exit(1)  #For every file in the current working directory if it is not a CSV file then skip
 
@@ -35,8 +36,9 @@ for csvFilename in os.listdir('.'):
     #             wtr.writerow((r[0], r[1], r[2], r[3], r[4], r[5])) #Write only the rows in the first 5 columns to the new output CSV file
 
 
+#Change code values for first date
 inputFileName = csvFilename
-outputFileName = "temp1.csv"
+outputFileName = 'temp1.csv'
 
 with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
@@ -51,6 +53,7 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     for line in r:
         if line[1] == '4' or line[1] == '15':
             w.writerow((line[0], '10', line[2], line[3], line[4], '10'))
+
         elif line[1] == '8':
             w.writerow((line[0], '2', line[2], line[3], line[4], '10'))
 
@@ -60,8 +63,10 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
         else:
             w.writerow((line[0], line[1], line[2], line[3], line[4], "10"))
 
+
+#Change code values for second date
 inputFileName = 'temp1.csv'
-outputFileName = "temp2.csv"
+outputFileName = 'temp2.csv'
 
 with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
@@ -84,7 +89,7 @@ os.remove('temp1.csv')
 
 
 inputFileName = 'temp2.csv'
-outputFileName = "temp3.csv"
+outputFileName = 'temp3.csv'
 
 with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
@@ -107,8 +112,10 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
 
 os.remove('temp2.csv')
 
+
+
 inputFileName = 'temp3.csv'
-outputFileName = "Reformatted_reclass.csv"
+outputFileName = 'Reformatted_reclass.csv'
 
 with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
@@ -131,9 +138,16 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
 
 os.remove('temp3.csv')
 
+
+
+dbf = Dbf5(sys.argv[2])
+dbf.to_csv('temp4.csv')
+
 # Merge newly updated csv with dbf (csv) of the YEAR basemap
-a = pd.read_csv("Reformatted_reclass.csv")
-b = pd.read_csv(sys.argv[2])
+a = pd.read_csv('Reformatted_reclass.csv')
+b = pd.read_csv('temp4.csv')
 
 merged = a.merge(b, on='SIMS_ID')
-merged.to_csv("Appended_reclass.csv", index=False)
+merged.to_csv('Appended_reclass.csv', index=False)
+
+os.remove('temp4.csv')
