@@ -9,7 +9,7 @@ import os, csv, sys
 from simpledbf import Dbf5
 
 usage = "Formats the CDL codes in the reclassified CSV file in preparation to make pivot tables\n" + \
-        "usage: python reformatReclass.py <Directory path of reclassified file> <filename of DBF>"
+        "usage: python reformatReclass.py <Directory path of appended reclassified CSV file>"
 
 if len(sys.argv) < 2:  #number of arguments required
     print usage
