@@ -11,12 +11,12 @@ from simpledbf import Dbf5
 usage = "Formates the CDL codes in the reclassified CSV file in preparation to make pivot tables\n" + \
         "usage: python reformatreclass.py <Directory path of reclassified file> <filename of DBF>"
 
-if len(sys.argv) < 2:  #number of arguments required
-    print usage
-    sys.exit(1)
+# if len(sys.argv) < 2:  #number of arguments required
+#     print usage
+#     sys.exit(1)
 
 # Set working directory to user input (directory path of input files)
-os.chdir(sys.argv[1])
+os.chdir("C:\Users\Michael\Desktop\Reclassified")
 
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
@@ -27,15 +27,6 @@ for csvFilename in os.listdir('.'):
 
     print('REFORMATTING ' + csvFilename + '...')
 
-    # with open(csvFilename, "rb") as source: #Open the input CSV file
-    #     rdr = csv.reader(source) #Use csv.reader to read the input CSV file
-    #
-    #     with open("result.csv", "wb") as result: #Now open a new output CSV file
-    #         wtr = csv.writer(result) #Use csv.writer to write in the new output CSV file
-    #         for r in rdr: #For each row in the input CSV file
-    #             wtr.writerow((r[0], r[1], r[2], r[3], r[4], r[5])) #Write only the rows in the first 5 columns to the new output CSV file
-
-
 #Change code values for first date
 inputFileName = csvFilename
 outputFileName = 'temp1.csv'
@@ -44,13 +35,13 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
-    # skip the first row from the reader, the old header
-    next(r, None)
+    #Change inputCSV to list
+    lines = list(r)
 
-    # write new header
-    w.writerow(['SIMS_ID','S20160720','S20160524','S20160422','S20160320','YTD20160720'])
+    #Change header to add SIMS_ID label
+    lines[0][0] = 'SIMS_ID'
 
-    for line in r:
+    for line in lines:
         if line[1] == '4' or line[1] == '15':
             w.writerow((line[0], '10', line[2], line[3], line[4], '10'))
 
@@ -140,7 +131,7 @@ os.remove('temp3.csv')
 
 
 
-dbf = Dbf5(sys.argv[2])
+dbf = Dbf5('base16_ca_poly_170619.dbf')
 dbf.to_csv('temp4.csv')
 
 # Merge newly updated csv with dbf (csv) of the YEAR basemap
