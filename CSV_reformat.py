@@ -32,8 +32,8 @@ if not os.path.exists('Output-Reformatted'):
     os.makedirs('Output-Reformatted', )
 
 # Make a new directory for the class output files if it does not already exist
-if not os.path.exists('Class-Template'):
-    os.makedirs('Class-Template', )
+# if not os.path.exists('Class-Template'):
+#    os.makedirs('Class-Template', )
 
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
