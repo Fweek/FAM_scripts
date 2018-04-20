@@ -11,12 +11,12 @@ from simpledbf import Dbf5
 usage = "Formates the CDL codes in the reclassified CSV file in preparation to make pivot tables\n" + \
         "usage: python reformatreclass.py <Directory path of reclassified file> <filename of DBF>"
 
-# if len(sys.argv) < 2:  #number of arguments required
-#     print usage
-#     sys.exit(1)
+if len(sys.argv) < 2:  #number of arguments required
+    print usage
+    sys.exit(1)
 
 # Set working directory to user input (directory path of input files)
-os.chdir("C:\Users\Michael\Desktop\Reclassified")
+os.chdir(sys.argv[1])
 
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
@@ -55,6 +55,7 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
             w.writerow((line[0], line[1], line[2], line[3], line[4], "10"))
 
 
+
 #Change code values for second date
 inputFileName = 'temp1.csv'
 outputFileName = 'temp2.csv'
@@ -63,7 +64,15 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
-    for line in r:
+    #Change inputCSV to list
+    lines = list(r)
+
+    FirstDate = str(lines[0][1])
+
+    #Change header to add SIMS_ID label
+    lines[0][5] = 'YTD'+FirstDate
+
+    for line in lines:
         if line[2] == '4' or line[2] == '16':
             w.writerow((line[0], line[1], '10', line[3], line[4], line[5]))
 
@@ -79,6 +88,7 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
 os.remove('temp1.csv')
 
 
+
 inputFileName = 'temp2.csv'
 outputFileName = 'temp3.csv'
 
@@ -86,12 +96,10 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
-    next(r, None)
+    #Change inputCSV to list
+    lines = list(r)
 
-    # write new header
-    w.writerow(['SIMS_ID','S20160720','S20160524','S20160422','S20160320','YTD20160720'])
-
-    for line in r:
+    for line in lines:
         if line[1] == 'NAN':
             w.writerow((line[0], line[1], line[2], line[3], line[4], line[5]))
 
@@ -112,12 +120,10 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
-    next(r, None)
+    #Change inputCSV to list
+    lines = list(r)
 
-    # write new header
-    w.writerow(['SIMS_ID','S20160720','S20160524','S20160422','S20160320','YTD20160720'])
-
-    for line in r:
+    for line in lines:
         if line[2] == 'NAN':
             w.writerow((line[0], line[1], line[2], line[3], line[4], line[5]))
 
