@@ -18,7 +18,7 @@ if len(sys.argv) < 1:  #number of arguments required
 # Set working directory to user input (directory path of input files)
 os.chdir(sys.argv[1])
 
-with open(sys.argv[2] +'\pivotTablesConfig.json') as json_data_file:
+with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
     data = json.load(json_data_file)
 
 countyList = []
