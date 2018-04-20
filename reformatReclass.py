@@ -137,7 +137,7 @@ os.remove('temp3.csv')
 
 
 
-dbf = Dbf5('base16_ca_poly_170619.dbf')
+dbf = Dbf5(sys.argv[2])
 dbf.to_csv('temp4.csv')
 
 # Merge newly updated csv with dbf (csv) of the YEAR basemap
