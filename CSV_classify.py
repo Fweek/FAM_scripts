@@ -3,9 +3,8 @@ from optparse import OptionParser
 import cyFieldClass as cyFC
 import pylab
 
-print 'DEFINE MAIN'
 def main():
-  usage = "usage: %prog [options] <filesDir>\n"+\
+  usage = "usage: %prog [options] <directory of mean NDVI timeseries CSV files>\n"+\
             "FAM algorithm classiciation"
   parser = OptionParser(usage=usage)
   parser.add_option("-s","--start",dest="tStart",default=6,
@@ -29,25 +28,19 @@ def main():
   outDir = args[0]
 
   tStart = int(opts.tStart)
-  print ' tStart:',tStart
   tEnd = int(opts.tEnd)
-  print ' tEnd:',tEnd
   tester = opts.tester
-  print ' tester:',tester
   subsetFn = opts.subset
   refYr = int(opts.refYear)
-  print ' refYr:',refYr
   curYr = int(opts.processYear)
-  print ' curYr:',curYr
   verbose = opts.verbose
 
   colOffset = 5 #number of columns used for field ids,y,x,numpixels,crop type
-  print ' colOffset:',colOffset
   if tStart < 6:
     print "Error, tStart has to be greater than 5"
     sys.exit(0)
- 
-  try:   
+
+  try:
     bTime = datetime.datetime.now()
 
     print "Field Classification ",tester
@@ -55,38 +48,33 @@ def main():
     #Open ref year
     outFn = "%s/%d_avgs.csv" % (outDir,refYr)
     refYear = openCSV(outFn)
-    print ' Opened refYr'
 
     #Processing year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr)
     prosYear = openCSV(outFn)
-    print ' Opened curYr'
 
     #Previous year
     outFn = "%s/%d_avgs.csv" % (outDir,curYr-1)
     prevYear = openCSV(outFn)
-    print ' Opened prevYr'
 
     #output file
     outFn = "%s/%d_class.csv" % (outDir,curYr)
     outClass = openCSV(outFn,"int32")
     outClass = outClass.astype(numpy.float32)
-    print ' Opened Class'
 
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
-    print ' Save output Class'
-    #sys.exit(0)
- 
+
+    sys.exit(0)
     #crop file
     #outFn = "%s/field_cropType.csv" % (outDir)
     #cropType = openCSV(outFn,"int32")
-          
-    print "Loaded data files"  
-     
-    print "Starting fallow fields classification..."      
+
+    print "Loaded data files"
+
+    print "Starting fallow fields classification..."
     tStart = tStart + colOffset #+ 6
     tEnd = tEnd + colOffset
-    print ' tStart: ',tStart,', tEnd: ',tEnd
+    print tStart,tEnd
     for i in range(tStart,tEnd):
       print datetime.datetime.now()
 
@@ -97,10 +85,10 @@ def main():
 
       #print prosYear.dtype
       outClass = cyFC.classifyFields(prosYear,prevYear,refYear,outClass,i)
-      
+
     print outFn
-    numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')       
-  
+    numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
+
     print "Start time: ",bTime
     print "End time: ",datetime.datetime.now()
 
@@ -108,16 +96,14 @@ def main():
     sys.stderr.write(str(e)+'\n')
     sys.exit(1)
 
-print 'DEFINE openCSV'
 def openCSV(outFn,dataType="float32"):
-  if os.path.exists(outFn): 
+  if os.path.exists(outFn):
     avgs = numpy.genfromtxt(outFn, dtype=dataType,delimiter = ',')
   else:
     print "Error: File %s doesn't exists" % outFn
     sys.exit(0)
-  
+
   return avgs
 
-print 'MAIN'
 if __name__ == '__main__':
    main()
