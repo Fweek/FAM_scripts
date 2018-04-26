@@ -1,10 +1,11 @@
+#Was fieldClassDriver.py
 import sys, numpy, netCDF4, datetime,os
 from optparse import OptionParser
 import cyFieldClass as cyFC
 import pylab
 
 def main():
-  usage = "usage: %prog [options] <directory of mean NDVI timeseries CSV files>\n"+\
+  usage = "usage: %prog [options] <Directory of mean NDVI timeseries CSV files>\n"+\
             "FAM algorithm classiciation"
   parser = OptionParser(usage=usage)
   parser.add_option("-s","--start",dest="tStart",default=6,
@@ -64,7 +65,7 @@ def main():
 
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
 
-    sys.exit(0)
+    #sys.exit(0)
     #crop file
     #outFn = "%s/field_cropType.csv" % (outDir)
     #cropType = openCSV(outFn,"int32")
