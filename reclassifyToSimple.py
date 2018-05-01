@@ -1,18 +1,17 @@
-import sys, numpy, netCDF4, datetime, os
+import sys, numpy, netCDF4, datetime, os, csv
 from optparse import OptionParser
 import cyFieldClass as cyFC
-import pylab
-
 
 def main():
-    usage = "usage: %prog [options] <Directory location of Reclassified folder> <output suffix>\n" + \
-            "Reclassifies input to Full and simple"
+    usage = "Reclassifies input to full and simple\n" + \
+            "usage: %prog [options] <Directory location of Reclassified folder> <output suffix>"
+            #Sample command line call: python reclassifyToSimple.py --start=0 --end=34 --processYear=2018 C:\Users\[username]\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified CA_2016
     parser = OptionParser(usage=usage)
     parser.add_option("-s", "--start", dest="tStart", default=0,
                       help="Start step")
     parser.add_option("-e", "--end", dest="tEnd", default=-1,
                       help="End step")
-    parser.add_option("--processYears", dest="processYears", default='2014,2013,2011',
+    parser.add_option("--processYears", dest="processYears", default="2014,2013,2011",
                       help="comma separated list of years to process, default 2014,2013,2011")
     parser.add_option("-v", "--verbose", dest="verbose", default=False,
                       help="Verbose")
@@ -26,12 +25,12 @@ def main():
     tStart = int(opts.tStart)
     tEnd = int(opts.tEnd)
     # curYr = int(opts.processYear)
-    processYears = opts.processYears.split(',')
+    processYears = opts.processYears.split(",")
     verbose = opts.verbose
 
-    colOffset = 5  # number of columns used for field ids,y,x,numpixels,crop type
+    colOffset = 5  # number of columns used for field ids,y,x,numpixels, and crop type
 
-    sFOffset = 8  # 12
+    sFOffset = 8
 
     # output file
     # outFn = "%s/Test_reclass.csv" % outDir #(outDir,curYr)
@@ -54,27 +53,22 @@ def main():
         # timePeriods = [(6,10,7),(6,14,6),(6,18,5),(19,22,4),(19,26,3),(19,29,2),(19,33,1)]
         timePeriods = [(6, 10, 7), (6, 14, 6), (6, 18, 5), (21, 24, 4), (21, 26, 3), (21, 29, 2), (21, 33, 1)]
 
-        # TODO: find better way
-        # yDim = 221632
-        # New grid
-        # yDim = 242409
-        # (258299) (226285)
-        # This is for the 2013 shapefile
-        # yDim = 264498
-        # This is for the 2012 that should've been the same
-        # yDim = 226285
-        # yDim = 242409
-        # yDim = 370897
-        # yDim = 342326
-        yDim = 120009
+        os.chdir(outDir)
+        csvFilename = sorted(os.listdir('.'))[0]
+        with open(csvFilename, 'rb') as f:
+            reader = csv.reader(f)
+            first_col_len = len(zip(*reader)[0])
+            yDim = int(first_col_len)
+        print yDim
+
         output = numpy.zeros([yDim, 26], dtype=numpy.float32)
 
         indxAdd = 0
 
-        print "Processing years %s" % opts.processYears
-        for yr in processYears:
-            yr = int(yr)
-            print "year %d" % yr
+        print "Processing years: %s" % opts.processYears
+        for yr in processYears: #For each year in the list of years given
+            yr = int(yr) #Turn selected year into an integer
+            print "Year %d" % yr
 
             # Processing year
             outFn = "%s/%d_class.csv" % (outDir, yr)
@@ -117,7 +111,7 @@ def main():
                 print  t3Int
 
                 print "t2: ", t2, "t3: ", t3
-                print 'tStart=', tStart, 'tEnd=', tEnd
+                print "tStart=", tStart, "tEnd=", tEnd
                 print "prosYear", prosYear
                 prosYear = prosYear.astype(numpy.float64)
                 outClass = cyFC.reclassify(prosYear, tStart, tEnd)
