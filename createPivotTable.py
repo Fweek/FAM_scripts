@@ -1,77 +1,83 @@
-# The following code creates a pivot or fallow acreage summary table.
-# Created by Carolyn Rosevelt, NASA-Ames/CSUMB Cooperative 02/14/18
 
-
-
-# Import libraries and read-in FAM output csv file.
 import json, csv, sys, os
 import pandas as pd
 import numpy as np
+from pandas import ExcelWriter
 
-usage = "Creates a pivot table of the appended reclassified CDL file. To add or omit counties of interest open the pivotTablesConfig.json file and edit it\n" + \
-        "usage: python pivotTables.py <Directory path of appended reclassified file> <Directory path of the .json config file"
+usage = "Creates a pivot table of the appended reclassified CDL file. To add or omit counties of interest, open the pivotTablesConfig.json file and edit it\n" + \
+        "usage: python createPivotTables.py <Directory path of appended reclassified file> <Directory path of the .json config file> <date column of interest>"
 
-if len(sys.argv) < 1:  #number of arguments required
-    print usage
-    sys.exit(1)
+# if len(sys.argv) < 3:  #number of arguments required
+#     print usage
+#     sys.exit(1)
 
 # Set working directory to user input (directory path of input files)
-os.chdir(sys.argv[1])
+# os.chdir(sys.argv[1])
 
-with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
+# Set working directory to user input (directory path of input files)
+os.chdir('C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified')
+
+# Load the json file which includes all the desired counties
+#with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
+with open('C:\Users\Michael\PycharmProjects\FAM\pivotTableConfig.json') as json_data_file:
     data = json.load(json_data_file)
 
+# Create an empty list
 countyList = []
 
+# For each county in the json file, append it to the empty list created above. We're making the json file into a list
 for item in data['county_list']:
     print item
     countyList.append(item)
 
-print countyList
+#Declare the input and output files
+# inputFileName = sys.argv[1]+"\Appended_reclass.csv"
+# outputFileName = sys.argv[1]+"\Appended_reclass_county.csv"
+inputFileName = 'C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\AppendedReclass.csv'
+outputFileName = 'C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\countyReclass.csv'
 
-inputFileName = sys.argv[1]+"\Appended_reclass.csv"
-outputFileName = sys.argv[1]+"\Appended_reclass_county.csv"
-remove_words = countyList
-
+#Open input and output CSV files
 with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
+    # For every row in the input file, if the county value matches with a county in the original json file then write it to the output file.
+    # This will result in a new file with all the unwanted counties removed.
     for line in r:
         if not any(remove_word in element
                       for element in line
-                      for remove_word in remove_words):
+                      for remove_word in countyList):
                             w.writerow(line)
 
-
-
-# Read-in merged csv file and convert to excel.
-df = pd.read_csv(sys.argv[1]+"\Appended_reclass_county.csv",  dtype={"CVPM": str})
-
+# Read-in newly created CSV file
+df = pd.read_csv('C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\countyReclass.csv',  low_memory=False)
+df.head()
 
 # Creates pivot table that indexes county name 'COUNTY' from the previously merged file and summarizes idle vs. cropped acreage.
-table = pd.pivot_table(df, index=["COUNTY"], values=["AcresMast"], columns=["S20160720"], aggfunc=[np.sum], fill_value=0, margins=True)
-print 'table created'
+df2 = pd.pivot_table(df,index=["COUNTY"], values=["AcresMast"], columns=[df.columns[1]], aggfunc=[np.sum], fill_value=0, margins=True)
+df2.to_csv('pivot.csv')
 
-# Changes column headers and assigns new names.
-table.columns = ['Idle', 'Rice', 'Alfalfa', 'Cropped', 'NaN', 'Total']
-print 'table columns changed'
+# Read-in pivot table CSV and drop the first two rows.
+df3 = pd.read_csv('pivot.csv', header = 2)
 
-# Formats values of acres 'AcresMast' to include commas yet keeps the float format of that variable.
-pd.options.display.float_format = '{:,.0f}'.format
-print 'added commas'
+# Create a data dictionary of crop categories and their respective crop codes
+cropDict = {'2':'Cropped - HC', '3':'Cropped - MC',  '4':'Emergent', '5':'Perennial', '6':'Young Perennial', '7':'Alfalfa', '8':'Winter wheat/Pasture', '9':'Rice', '10':'No crop to date - HC', '11':'No crop to date - MC', '12':'No crop to date - LC', '13':'No crop yet - Perennial', '14':'No crop yet - Alfalfa', '15':'No crop yet - Rice', '16':'Cleared Perennial', '17':'Failed Rice'}
 
-# prints out table, but does not save it yet.
-print table
+# Create a list of just the headers of the pivot table
+headers_list = df3.columns
 
-# Writes and saves table to new excel workbook, a singlular table with fallow acreage county summaries.
-writer = pd.ExcelWriter(sys.argv[1]+"\Pivot_CA_COUNTIES_2016.xlsx")
-print 'wrote new file'
+# For the headers in index 1 to 2 less than the length, replace the crop code with the crop category
+for i in range(1, (len(headers_list)-2)):
+    header = df3.columns[i]
+    df3.columns.values[i] = cropDict[header]
 
-temp_df = table
+# Save to CSV
+#df3.to_csv('pivotTable.csv', index=False)
 
-temp_df.to_excel(writer)
-
+# Save to Excel
+writer = ExcelWriter('pivotTable.xlsx')
+df3.to_excel(writer)
 writer.save()
 
-os.remove('Appended_reclass_county.csv')
+os.remove('pivot.csv')
+os.remove('countyReclass.csv')
