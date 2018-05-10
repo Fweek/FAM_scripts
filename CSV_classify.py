@@ -77,12 +77,12 @@ def main():
     tEnd = tEnd + colOffset
     print tStart,tEnd
     for i in range(tStart,tEnd):
-      print datetime.datetime.now()
+      #print datetime.datetime.now()
 
       t2 = prosYear[0,i]
       datet = netCDF4.num2date(t2, units="days since 1980-1-1 00:00:00", calendar='gregorian')
       strD = datet.strftime("%Y-%m-%d")
-      print "Processing time %s" % strD
+      #print "Processing time %s" % strD
 
       #print prosYear.dtype
       outClass = cyFC.classifyFields(prosYear,prevYear,refYear,outClass,i)
