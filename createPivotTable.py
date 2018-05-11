@@ -5,39 +5,35 @@ import numpy as np
 from pandas import ExcelWriter
 
 usage = "Creates a pivot table of the appended reclassified CDL file. To add or omit counties of interest, open the pivotTablesConfig.json file and edit it\n" + \
-        "usage: python createPivotTables.py <Directory path of appended reclassified file> <Directory path of the .json config file> <date column of interest>"
+        "usage: python createPivotTables.py <Directory path of appended reclassified file> <Directory path of the .json config file>"
 
-# if len(sys.argv) < 3:  #number of arguments required
-#     print usage
-#     sys.exit(1)
-
-# Set working directory to user input (directory path of input files)
-# os.chdir(sys.argv[1])
+if len(sys.argv) < 2:  #number of arguments required
+    print usage
+    sys.exit(1)
 
 # Set working directory to user input (directory path of input files)
-os.chdir('C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified')
+os.chdir(sys.argv[1])
 
 # Load the json file which includes all the desired counties
-#with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
-with open('C:\Users\Michael\PycharmProjects\FAM\pivotTableConfig.json') as json_data_file:
+with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
+#with open('C:\Users\Michael\PycharmProjects\FAM\pivotTableConfig.json') as json_data_file:
     data = json.load(json_data_file)
 
 # Create an empty list
 countyList = []
 
 # For each county in the json file, append it to the empty list created above. We're making the json file into a list
+print "COUNTIES TO BE PROCESSED:"
 for item in data['county_list']:
     print item
     countyList.append(item)
 
 #Declare the input and output files
-# inputFileName = sys.argv[1]+"\Appended_reclass.csv"
-# outputFileName = sys.argv[1]+"\Appended_reclass_county.csv"
-inputFileName = 'C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\AppendedReclass.csv'
-outputFileName = 'C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\countyReclass.csv'
+inputFilename = sys.argv[1]+"\AppendedReclass.csv"
+outputFilename = sys.argv[1]+"\countyReclass.csv"
 
 #Open input and output CSV files
-with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
+with open(inputFilename, 'rb') as inFile, open(outputFilename, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
@@ -50,10 +46,11 @@ with open(inputFileName, 'rb') as inFile, open(outputFileName, 'wb') as outfile:
                             w.writerow(line)
 
 # Read-in newly created CSV file
-df = pd.read_csv('C:\Users\Michael\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified\countyReclass.csv',  low_memory=False)
+df = pd.read_csv('countyReclass.csv',  low_memory=False)
 df.head()
 
 # Creates pivot table that indexes county name 'COUNTY' from the previously merged file and summarizes idle vs. cropped acreage.
+print "CREATING PIVOT TABLE..."
 df2 = pd.pivot_table(df,index=["COUNTY"], values=["AcresMast"], columns=[df.columns[1]], aggfunc=[np.sum], fill_value=0, margins=True)
 df2.to_csv('pivot.csv')
 
