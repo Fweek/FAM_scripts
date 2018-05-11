@@ -57,7 +57,7 @@ a = pd.read_csv('reformattedReclass.csv')
 b = pd.read_csv('dbf.csv')
 
 merged = a.merge(b, on='SIMS_ID')
-merged.to_csv('Appended_reclass.csv', index=False)
+merged.to_csv('appended_reclass.csv', index=False)
 
 # Remove intermediate files
 os.remove('dbf.csv')
