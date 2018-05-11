@@ -4,8 +4,9 @@ import cyFieldClass as cyFC
 
 def main():
     usage = "Reclassifies input to full and simple\n" + \
-            "usage: %prog [options] <Directory location of Reclassified folder> <year of interest>"
-            #Sample command line call: python reclassifyToSimple.py --start=0 --end=34 --processYear=2018 C:\Users\[username]\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified CA_2016
+            "usage: %prog [options] <Directory location of Reclassified folder>"
+            #Sample command line call: python reclassifyToSimple.py --start=0 --end=34 --processYear=2018 C:\Users\[username]\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified
+
     parser = OptionParser(usage=usage)
     parser.add_option("-s", "--start", dest="tStart", default=0,
                       help="Start step")
@@ -20,7 +21,6 @@ def main():
         sys.exit(parser.print_help())
 
     outDir = args[0]
-    preFix = args[1]
 
     tStart = int(opts.tStart)
     tEnd = int(opts.tEnd)
@@ -127,8 +127,8 @@ def main():
 
                 # indxAdd = indxAdd + 4
 
-        print "saving %s/%s_reclass.csv" % (outDir, preFix)
-        outResFn = "%s/%s_reclass.csv" % (outDir, preFix)
+        print "saving %s/%s_reclass.csv" % (outDir, opts.processYears)
+        outResFn = "%s/%s_reclass.csv" % (outDir, opts.processYears)
         numpy.savetxt(outResFn, output, delimiter=",", fmt='%d')
 
         # print prosYear.dtype
