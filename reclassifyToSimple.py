@@ -127,8 +127,8 @@ def main():
 
                 # indxAdd = indxAdd + 4
 
-        print "saving %s/%s_reclassified.csv" % (outDir, preFix)
-        outResFn = "%s/%s_reclassified.csv" % (outDir, preFix)
+        print "saving %s/%s_reclass.csv" % (outDir, preFix)
+        outResFn = "%s/%s_reclass.csv" % (outDir, preFix)
         numpy.savetxt(outResFn, output, delimiter=",", fmt='%d')
 
         # print prosYear.dtype
