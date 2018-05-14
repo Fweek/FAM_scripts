@@ -5,7 +5,7 @@ import cyFieldClass as cyFC
 def main():
     usage = "Reclassifies input to full and simple\n" + \
             "usage: %prog [options] <Directory location of Reclassified folder>"
-            #Sample command line call: python reclassifyToSimple.py --start=0 --end=34 --processYear=2018 C:\Users\[username]\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified
+            #Sample command line call: python reclassifyToSimple.py --start=0 --end=34 --processYear=2016 C:\Users\[username]\Desktop\CALIFORNIA\CA_FAM_2016\Reclassified
 
     parser = OptionParser(usage=usage)
     parser.add_option("-s", "--start", dest="tStart", default=0,
@@ -113,6 +113,7 @@ def main():
                 print "t2: ", t2, "t3: ", t3
                 print "tStart=", tStart, "tEnd=", tEnd
                 print "prosYear", prosYear
+                sys.stdout.flush()
                 prosYear = prosYear.astype(numpy.float64)
                 outClass = cyFC.reclassify(prosYear, tStart, tEnd)
 
