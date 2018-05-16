@@ -15,7 +15,7 @@ if len(sys.argv) < 2:  #number of arguments required
 os.chdir(sys.argv[1])
 
 # Load the json file which includes all the desired counties
-with open(sys.argv[2] +'\pivotTableConfig.json') as json_data_file:
+with open('pivotTableConfig.json') as json_data_file:
 #with open('C:\Users\Michael\PycharmProjects\FAM\pivotTableConfig.json') as json_data_file:
     data = json.load(json_data_file)
 
