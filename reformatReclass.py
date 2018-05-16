@@ -1,5 +1,5 @@
 import pandas as pd
-import os, sys
+import os, sys, time
 from simpledbf import Dbf5
 
 usage = "Further consolidates CDL codes into either cropped (2) or not cropped (10) in preparation to make pivot tables\n" + \
@@ -19,8 +19,8 @@ dbf.to_csv('dbf.csv')
 # Add Seasonal and Annual columns and fill with reduced CDL codes
 # Loop through every file in the current working directory.
 for csvFilename in os.listdir('.'):
-    if not csvFilename.startswith('reclassified'): #skip the file if it does not start with "reclassified" in filename
-        print 'SKIPPING ' + csvFilename + ': Does not start with reclassified'
+    if not csvFilename.endswith('_reclass.csv'): #skip the file if it does not end with "_reclass.csv" in filename
+        print 'SKIPPING ' + csvFilename + ': Not a reclassified csv file'
         continue
 
     print('REFORMATTING ' + csvFilename + '...')
@@ -57,7 +57,11 @@ a = pd.read_csv('reformattedReclass.csv')
 b = pd.read_csv('dbf.csv')
 
 merged = a.merge(b, on='SIMS_ID')
-merged.to_csv('appended_reclass.csv', index=False)
+merged.drop('Unnamed: 0', axis=1, inplace=True)
+print merged
+merged.to_csv('appendedReclass.csv', index=False)
+print "Reformat complete"
+time.sleep(1)
 
 # Remove intermediate files
 os.remove('dbf.csv')
