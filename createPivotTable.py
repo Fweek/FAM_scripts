@@ -5,9 +5,9 @@ import numpy as np
 from pandas import ExcelWriter
 
 usage = "Creates a pivot table of the appended reclassified CDL file. To add or omit counties of interest, open the pivotTablesConfig.json file and edit it\n" + \
-        "usage: python createPivotTables.py <Directory path of appended reclassified file> <Directory path of the .json config file>"
+        "usage: python createPivotTables.py <Directory path of appended reclassified file>"
 
-if len(sys.argv) < 2:  #number of arguments required
+if len(sys.argv) < 1:  #number of arguments required
     print usage
     sys.exit(1)
 
