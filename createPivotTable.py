@@ -16,7 +16,6 @@ os.chdir(sys.argv[1])
 
 # Load the json file which includes all the desired counties
 with open('pivotTableConfig.json') as json_data_file:
-#with open('C:\Users\Michael\PycharmProjects\FAM\pivotTableConfig.json') as json_data_file:
     data = json.load(json_data_file)
 
 # Create an empty list
@@ -58,13 +57,14 @@ df2.to_csv('pivot.csv')
 df3 = pd.read_csv('pivot.csv', header = 2)
 
 # Create a data dictionary of crop categories and their respective crop codes
-cropDict = {'2':'Cropped - HC', '3':'Cropped - MC',  '4':'Emergent', '5':'Perennial', '6':'Young Perennial', '7':'Alfalfa', '8':'Winter wheat/Pasture', '9':'Rice', '10':'No crop to date - HC', '11':'No crop to date - MC', '12':'No crop to date - LC', '13':'No crop yet - Perennial', '14':'No crop yet - Alfalfa', '15':'No crop yet - Rice', '16':'Cleared Perennial', '17':'Failed Rice'}
+cropDict = {'0':'NA', '2':'Cropped - HC', '3':'Cropped - MC',  '4':'Emergent', '5':'Perennial', '6':'Young Perennial', '7':'Alfalfa', '8':'Winter wheat/Pasture', '9':'Rice', '10':'No crop to date - HC', '11':'No crop to date - MC', '12':'No crop to date - LC', '13':'No crop yet - Perennial', '14':'No crop yet - Alfalfa', '15':'No crop yet - Rice', '16':'Cleared Perennial', '17':'Failed Rice', 'All':'All'}
 
 # Create a list of just the headers of the pivot table
 headers_list = df3.columns
+print headers_list
 
-# For the headers in index 1 to 2 less than the length, replace the crop code with the crop category
-for i in range(1, (len(headers_list)-2)):
+# For the headers from index 1 to 2 less than the length, replace the crop code with the crop category
+for i in range(1, len(headers_list)):
     header = df3.columns[i]
     df3.columns.values[i] = cropDict[header]
 
