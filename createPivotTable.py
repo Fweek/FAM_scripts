@@ -27,6 +27,8 @@ for item in data['county_list']:
     print item
     countyList.append(item)
 
+print countyList
+
 #Declare the input and output files
 inputFilename = sys.argv[1]+"\AppendedReclass.csv"
 outputFilename = sys.argv[1]+"\countyReclass.csv"
@@ -36,21 +38,20 @@ with open(inputFilename, 'rb') as inFile, open(outputFilename, 'wb') as outfile:
     r = csv.reader(inFile)
     w = csv.writer(outfile)
 
-    # For every row in the input file, if the county value matches with a county in the original json file then write it to the output file.
+    # For every row in the input file, if the county value matches with a county in the original json file then don't write it to the output file.
     # This will result in a new file with all the unwanted counties removed.
     for line in r:
-        if not any(remove_word in element
+        if not any(county_name in element
                       for element in line
-                      for remove_word in countyList):
+                      for county_name in countyList):
                             w.writerow(line)
 
 # Read-in newly created CSV file
-df = pd.read_csv('countyReclass.csv',  low_memory=False)
-df.head()
+df = pd.read_csv('countyReclass.csv',  low_memory=False) #using low memory false to bypass stating dtype explictly
 
 # Creates pivot table that indexes county name 'COUNTY' from the previously merged file and summarizes idle vs. cropped acreage.
 print "CREATING PIVOT TABLE..."
-df2 = pd.pivot_table(df,index=["COUNTY"], values=["AcresMast"], columns=[df.columns[1]], aggfunc=[np.sum], fill_value=0, margins=True)
+df2 = pd.pivot_table(df,index=["COUNTY"], values=["ACRES"], columns=[df.columns[1]], aggfunc=[np.sum], fill_value=0, margins=True)
 df2.to_csv('pivot.csv')
 
 # Read-in pivot table CSV and drop the first two rows.
