@@ -5,9 +5,9 @@ import numpy as np
 from pandas import ExcelWriter
 
 usage = "Creates a pivot table of the appended reclassified CDL file. To add or omit counties of interest, open the pivotTablesConfig.json file and edit it\n" + \
-        "usage: python createPivotTables.py <Directory path of appended reclassified file>"
+        "usage: python createPivotTables.py <Directory path of appended reclassified file> <Date of column of interest>"
 
-if len(sys.argv) < 1:  #number of arguments required
+if len(sys.argv) < 2:  #number of arguments required
     print usage
     sys.exit(1)
 
@@ -51,7 +51,7 @@ df = pd.read_csv('countyReclass.csv',  low_memory=False) #using low memory false
 
 # Creates pivot table that indexes county name 'COUNTY' from the previously merged file and summarizes idle vs. cropped acreage.
 print "CREATING PIVOT TABLE..."
-df2 = pd.pivot_table(df,index=["COUNTY"], values=["ACRES"], columns=[df.columns[1]], aggfunc=[np.sum], fill_value=0, margins=True)
+df2 = pd.pivot_table(df,index=["COUNTY"], values=["ACRES"], columns=[str(sys.argv[2])], aggfunc=[np.sum], fill_value=0, margins=True)
 df2.to_csv('pivot.csv')
 
 # Read-in pivot table CSV and drop the first two rows.
