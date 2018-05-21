@@ -29,14 +29,22 @@ for csvFilename in os.listdir('.'):
     df = pd.read_csv(csvFilename)
 
     # Change columns names
-    df.rename(columns={df.columns[9]: 'S'+df.columns[9]}, inplace=True)
-    df.rename(columns={df.columns[10]: 'S'+df.columns[10]}, inplace=True)
-    df.rename(columns={df.columns[11]: 'S'+df.columns[11]}, inplace=True)
-    df.rename(columns={df.columns[12]: 'S'+df.columns[12]}, inplace=True)
-    df.rename(columns={df.columns[13]: 'S'+df.columns[13]}, inplace=True)
-    df.rename(columns={df.columns[14]: 'S'+df.columns[14]}, inplace=True)
-    df.rename(columns={df.columns[15]: 'S'+df.columns[15]}, inplace=True)
-    df.rename(columns={df.columns[16]: 'S'+df.columns[16]}, inplace=True)
+    df.rename(columns={df.columns[1]: 'F'+df.columns[1]}, inplace=True)
+    df.rename(columns={df.columns[2]: 'F'+df.columns[2]}, inplace=True)
+    df.rename(columns={df.columns[3]: 'F'+df.columns[3]}, inplace=True)
+    df.rename(columns={df.columns[4]: 'F'+df.columns[4]}, inplace=True)
+    df.rename(columns={df.columns[5]: 'F'+df.columns[5]}, inplace=True)
+    df.rename(columns={df.columns[6]: 'F'+df.columns[6]}, inplace=True)
+    df.rename(columns={df.columns[7]: 'F'+df.columns[7]}, inplace=True)
+
+    df.rename(columns={df.columns[9]: 'S'+df.columns[1]}, inplace=True)
+    df.rename(columns={df.columns[10]: 'S'+df.columns[2]}, inplace=True)
+    df.rename(columns={df.columns[11]: 'S'+df.columns[3]}, inplace=True)
+    df.rename(columns={df.columns[12]: 'S'+df.columns[4]}, inplace=True)
+    df.rename(columns={df.columns[13]: 'S'+df.columns[5]}, inplace=True)
+    df.rename(columns={df.columns[14]: 'S'+df.columns[6]}, inplace=True)
+    df.rename(columns={df.columns[15]: 'S'+df.columns[7]}, inplace=True)
+
     df.rename(columns={'-9999': 'SIMS_ID'}, inplace=True)
     df.rename(columns={df.columns[16]: 'Winter'}, inplace=True)
     df.rename(columns={df.columns[17]: 'Summer'}, inplace=True)
@@ -45,9 +53,6 @@ for csvFilename in os.listdir('.'):
 
     # Delete unnecessary columns
     df = df.drop(df.columns[19:26], axis=1)
-    print df
-
-
 
     # If then statements for how to fill Winter, Summer, and Annual columns
     # [ADD RULES HERE]
@@ -57,7 +62,7 @@ for csvFilename in os.listdir('.'):
     cols = ['Winter', 'Summer']
     df['Annual'] = df[cols].apply(lambda x: 2 if 2 in x.values else 10, axis=1)
 
-    #print(df)
+    print(df)
 
     # Export dataframe to CSV
     df.to_csv('reformattedReclass.csv')
@@ -68,7 +73,7 @@ b = pd.read_csv('dbf.csv')
 
 merged = a.merge(b, on='SIMS_ID')
 merged.drop('Unnamed: 0', axis=1, inplace=True)
-#print merged
+print merged
 merged.to_csv('appendedReclass.csv', index=False)
 print "Reformat complete"
 time.sleep(1)
