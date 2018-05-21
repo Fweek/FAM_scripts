@@ -62,15 +62,11 @@ cropDict = {'0':'NA', '2':'Cropped - HC', '3':'Cropped - MC',  '4':'Emergent', '
 
 # Create a list of just the headers of the pivot table
 headers_list = df3.columns
-print headers_list
 
 # For the headers from index 1 to 2 less than the length, replace the crop code with the crop category
 for i in range(1, len(headers_list)):
     header = df3.columns[i]
     df3.columns.values[i] = cropDict[header]
-
-# Save to CSV
-#df3.to_csv('pivotTable.csv', index=False)
 
 # Save to Excel
 writer = ExcelWriter('pivotTable.xlsx')
