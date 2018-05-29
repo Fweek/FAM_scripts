@@ -29,6 +29,14 @@ for csvFilename in os.listdir('.'):
     df = pd.read_csv(csvFilename)
 
     # Change columns names
+    col1=df.columns[1]
+    col2=df.columns[2]
+    col3=df.columns[3]
+    col4=df.columns[4]
+    col5=df.columns[5]
+    col6=df.columns[6]
+    col7=df.columns[7]
+
     df.rename(columns={df.columns[1]: 'F'+df.columns[1]}, inplace=True)
     df.rename(columns={df.columns[2]: 'F'+df.columns[2]}, inplace=True)
     df.rename(columns={df.columns[3]: 'F'+df.columns[3]}, inplace=True)
@@ -37,13 +45,13 @@ for csvFilename in os.listdir('.'):
     df.rename(columns={df.columns[6]: 'F'+df.columns[6]}, inplace=True)
     df.rename(columns={df.columns[7]: 'F'+df.columns[7]}, inplace=True)
 
-    df.rename(columns={df.columns[9]: 'S'+df.columns[1]}, inplace=True)
-    df.rename(columns={df.columns[10]: 'S'+df.columns[2]}, inplace=True)
-    df.rename(columns={df.columns[11]: 'S'+df.columns[3]}, inplace=True)
-    df.rename(columns={df.columns[12]: 'S'+df.columns[4]}, inplace=True)
-    df.rename(columns={df.columns[13]: 'S'+df.columns[5]}, inplace=True)
-    df.rename(columns={df.columns[14]: 'S'+df.columns[6]}, inplace=True)
-    df.rename(columns={df.columns[15]: 'S'+df.columns[7]}, inplace=True)
+    df.rename(columns={df.columns[9]: 'S'+col1}, inplace=True)
+    df.rename(columns={df.columns[10]: 'S'+col2}, inplace=True)
+    df.rename(columns={df.columns[11]: 'S'+col3}, inplace=True)
+    df.rename(columns={df.columns[12]: 'S'+col4}, inplace=True)
+    df.rename(columns={df.columns[13]: 'S'+col5}, inplace=True)
+    df.rename(columns={df.columns[14]: 'S'+col6}, inplace=True)
+    df.rename(columns={df.columns[15]: 'S'+col7}, inplace=True)
 
     df.rename(columns={'-9999': 'SIMS_ID'}, inplace=True)
     df.rename(columns={df.columns[16]: 'Winter'}, inplace=True)
