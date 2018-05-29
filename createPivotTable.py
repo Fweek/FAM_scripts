@@ -58,7 +58,7 @@ df2.to_csv('pivot.csv')
 df3 = pd.read_csv('pivot.csv', header = 2)
 
 # Create a data dictionary of crop categories and their respective crop codes
-cropDict = {'0':'NA', '2':'Cropped - HC', '3':'Cropped - MC',  '4':'Emergent', '5':'Perennial', '6':'Young Perennial', '7':'Alfalfa', '8':'Winter wheat/Pasture', '9':'Rice', '10':'No crop to date - HC', '11':'No crop to date - MC', '12':'No crop to date - LC', '13':'No crop yet - Perennial', '14':'No crop yet - Alfalfa', '15':'No crop yet - Rice', '16':'Cleared Perennial', '17':'Failed Rice', 'All':'All'}
+cropDict = {'0':'NA', '2':'Cropped', '3':'Cropped - MC',  '4':'Emergent', '5':'Perennial', '6':'Young Perennial', '7':'Alfalfa', '8':'Winter wheat/Pasture', '9':'Rice', '10':'No crop to date', '11':'No crop to date - MC', '12':'No crop to date - LC', '13':'No crop yet - Perennial', '14':'No crop yet - Alfalfa', '15':'No crop yet - Rice', '16':'Cleared Perennial', '17':'Failed Rice', 'All':'All'}
 
 # Create a list of just the headers of the pivot table
 headers_list = df3.columns
