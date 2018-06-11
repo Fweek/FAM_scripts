@@ -65,11 +65,6 @@ def main():
 
     numpy.savetxt(outFn, outClass, delimiter=",",fmt='%d')
 
-    #sys.exit(0)
-    #crop file
-    #outFn = "%s/field_cropType.csv" % (outDir)
-    #cropType = openCSV(outFn,"int32")
-
     print "Loaded data files"
 
     print "Starting fallow fields classification..."
@@ -79,13 +74,13 @@ def main():
     for i in range(tStart,tEnd):
       print datetime.datetime.now()
       sys.stdout.flush()
-      
+
       t2 = prosYear[0,i]
       datet = netCDF4.num2date(t2, units="days since 1980-1-1 00:00:00", calendar='gregorian')
       strD = datet.strftime("%Y-%m-%d")
       print "Processing time %s" % strD
       sys.stdout.flush()
-      
+
       #print prosYear.dtype
       outClass = cyFC.classifyFields(prosYear,prevYear,refYear,outClass,i)
 
