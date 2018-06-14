@@ -96,7 +96,8 @@ def main():
 
 def openCSV(outFn,dataType="float32"):
   if os.path.exists(outFn):
-    avgs = numpy.genfromtxt(outFn, dtype=dataType,delimiter = ',')
+    #changed to loadtxt from genfromtxt. Loadtxt uses less memory (https://stackoverflow.com/questions/8956832/python-out-of-memory-on-large-csv-file-numpy)
+    avgs = numpy.loadtxt(outFn, dtype=dataType,delimiter = ',') 
   else:
     print "Error: File %s doesn't exists" % outFn
     sys.exit(0)
