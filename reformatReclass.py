@@ -44,7 +44,7 @@ for csvFilename in os.listdir('.'):
     df.rename(columns={df.columns[5]: 'F'+df.columns[5]}, inplace=True)
     df.rename(columns={df.columns[6]: 'F'+df.columns[6]}, inplace=True)
     df.rename(columns={df.columns[7]: 'F'+df.columns[7]}, inplace=True)
-
+    df.rename(columns={df.columns[8]: 'NA'}, inplace=True) #replaces zero column header with NA
     df.rename(columns={df.columns[9]: 'S'+col1}, inplace=True)
     df.rename(columns={df.columns[10]: 'S'+col2}, inplace=True)
     df.rename(columns={df.columns[11]: 'S'+col3}, inplace=True)
