@@ -1,11 +1,12 @@
 import sys,os
 import numpy
 import matplotlib.pyplot as plt
+from datetime import date
 
 #-----------------------------------------------------------
 def main():
   if len(sys.argv) < 3:
-     sys.stderr.write("GraphCSVs.py <Input directory> <List of SIMSIDs to graph> <mean NDVI timeseries CSV file> <year> <Output suffix>\n")
+     sys.stderr.write("ndviGraphs.py <Input directory> <CSV list of SIMSIDs to graph> <merged mean NDVI timeseries CSV file> <year> <Output suffix>\n")
      sys.exit(1)
   outDir = sys.argv[1]
   inFn,avgsFn,year,outSuf = outDir+"/"+sys.argv[2],outDir+"/"+sys.argv[3],int(sys.argv[4]),sys.argv[5]
@@ -31,23 +32,29 @@ def main():
   #hdrMa = numpy.ma.masked_less_equal(hdr,0)
 
   #sys.exit(0)
-  if year == 2010:
-     tStart = 10958
-  elif year == 2011:
-     tStart = 11323
-  elif year == 2012:
-     tStart = 11688
-  elif year == 2013:
-     tStart = 12054
-  elif year == 2014:
-     tStart = 12419
-  elif year == 2015:
-     tStart = 12784
-  elif year == 2016:
-     tStart = 13149
-  else:
-     print "Error: Only 2010-2016 supported"
-     sys.exit(1)
+
+  d0 = date(1980, 01, 01)
+  d1 = date(year, 01, 01)
+  delta = d1 - d0
+  tStart = delta.days
+
+  # if year == 2010: #days since 1980-01-01
+  #    tStart = 10958
+  # elif year == 2011:
+  #    tStart = 11323
+  # elif year == 2012:
+  #    tStart = 11688
+  # elif year == 2013:
+  #    tStart = 12054
+  # elif year == 2014:
+  #    tStart = 12419
+  # elif year == 2015:
+  #    tStart = 12784
+  # elif year == 2016:
+  #    tStart = 13149
+  # else:
+  #    print "Error: Only 2010-2016 supported"
+  #    sys.exit(1)
   tEnd = tStart + 365
 
   xSeries = numpy.zeros((46),dtype=numpy.int32)
