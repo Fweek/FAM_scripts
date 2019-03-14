@@ -93,7 +93,7 @@ def removeFeatureGeometry(feature):
   return ee.Feature(feature.setGeometry(None))
 
 
-#Function to add dummy feature to prevent NDVI column from being ddropped
+#Function to add dummy feature to prevent NDVI column from being dropped
 def  addDummyFeature(fc):
   dummy = ee.FeatureCollection(
     ee.Feature(None, {'image_time_start_string': 0,
