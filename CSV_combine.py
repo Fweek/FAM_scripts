@@ -1,4 +1,4 @@
-#This script combines the compplementary Landsat7 and Landsat8 reformatted CSV files into one. It will replace Landat7 values where Landsat8 values are higher.
+#This script combines the complementary Landsat7 and Landsat8 reformatted CSV files into one. It will replace Landat7 values where Landsat8 values are higher.
 
 # Import packages
 import sys, os.path, datetime, numpy
