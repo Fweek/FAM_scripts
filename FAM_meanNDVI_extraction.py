@@ -59,9 +59,15 @@ def calculateNDVI_L8_TOA(image):
 
 
 #Function to calculate NDVI for Sentinel 2A (no cloudmasking yet)
+#Multiplying by these factors will normalize the red and nir bands 
+#    of sentinel 2a to Landsat 7 and 8 red and nir. 
 def calculateNDVI_Sent2A(image):
-    ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI')
-    return image.addBands(ndvi)
+   red = image.select('B4').multiply(0.9887) 
+   nir = image.select('B8').multiply(1.0180)
+   temp = nir.addBands(red)
+
+   ndvi = temp.normalizedDifference(['B8', 'B4']).rename('NDVI')
+   return image.addBands(ndvi)
 
 
 #Function to calculate mean NDVI
