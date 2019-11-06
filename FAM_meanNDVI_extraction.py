@@ -59,9 +59,15 @@ def calculateNDVI_L8_TOA(image):
 
 
 #Function to calculate NDVI for Sentinel 2A (no cloudmasking yet)
+#Multiplying by these factors will normalize the red and nir bands
+#    of sentinel 2a to Landsat 7 and 8 red and nir.
 def calculateNDVI_Sent2A(image):
-    ndvi = image.normalizedDifference(['B8', 'B4']).rename('NDVI')
-    return image.addBands(ndvi)
+   red = image.select('B4').multiply(.8)
+   nir = image.select('B8')
+   temp = nir.addBands(red)
+
+   ndvi = temp.normalizedDifference(['B8', 'B4']).rename('NDVI')
+   return image.addBands(ndvi)
 
 
 #Function to calculate mean NDVI
@@ -147,7 +153,9 @@ while export_offset < allfields_count: #while the export_offset counter is less 
     elif sys.argv[2] == 'Sent2A':
         Sent2A_IC = ee.ImageCollection("COPERNICUS/S2") #Sentinel-2 MSI: MultiSpectral Instrument, Level-1C
         NDVI_IC = Sent2A_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_Sent2A).select('NDVI')
-
+    elif sys.argv[2] == 'Sent2ASR':
+        Sent2A_IC = ee.ImageCollection("COPERNICUS/S2_SR") #Sentinel-2 MSI: MultiSpectral Instrument, Level-1C
+        NDVI_IC = Sent2A_IC.filterDate(tStart, tEnd).filterBounds(fields).map(calculateNDVI_Sent2A).select('NDVI')
 
     if vMode == 'y':
         print "Calculating field averages"
